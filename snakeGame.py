@@ -8,9 +8,9 @@ pygame.init()
 
 class Direction(Enum):
     UP = 1
-    DOWN = 2
-    LEFT = 3
-    RIGHT = 4
+    RIGHT = 2
+    DOWN = 3
+    LEFT = 4
 
 Point = namedtuple('Point', 'x, y')
 
