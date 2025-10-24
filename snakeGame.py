@@ -28,7 +28,6 @@ class SnakeGame:
     def __init__(self):  
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Snake AI")
-        self.screen.fill(GAME_BG)
         self.clock = pygame.time.Clock()
 
         self.direction = Direction.RIGHT
@@ -56,6 +55,8 @@ class SnakeGame:
             self.head = Point(self.head.x + GRID_SIZE, self.head.y)
 
     def updateUI(self):  
+        self.screen.fill(GAME_BG) # resets UI so that old snake parts are drawn over
+
         for point in self.snake:
             pygame.draw.circle(self.screen, SNAKE_COLOUR, [point.x + (GRID_SIZE // 2), point.y + (GRID_SIZE // 2)], (GRID_SIZE // 2))
         
@@ -67,7 +68,7 @@ class SnakeGame:
     def handleMove(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                print('Final Score', game.score)
+                print('Final score:', self.score)
                 pygame.quit()
                 quit()
             if event.type == pygame.KEYDOWN:
@@ -103,6 +104,6 @@ while running:
     if game_over == True:
         running = False
 
-print('Final Score', game.score)
+print('Final score:', game.score)
 
 pygame.quit()
