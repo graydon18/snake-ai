@@ -29,13 +29,16 @@ class SnakeAI:
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Snake AI")
         self.clock = pygame.time.Clock()
+        self.reset()
 
+    def reset(self):
         self.direction = Direction.RIGHT
         self.head = Point(SCREEN_WIDTH / 4, SCREEN_HEIGHT /2)
         self.body = [self.head, Point(self.head.x - GRID_SIZE, self.head.y), Point(self.head.x - (2 * GRID_SIZE), self.head.y)]
-        
         self.score = 0
         self.placeFood()
+
+        self.sameState = 0
 
     def placeFood(self):
         x = random.randint(0, (SCREEN_WIDTH - GRID_SIZE) // GRID_SIZE) * GRID_SIZE
@@ -44,7 +47,7 @@ class SnakeAI:
         if self.food in self.body:
             self.placeFood()
     
-    def incHead(self, direction):
+    def incHead(self, action):
         if direction == Direction.UP:
             self.head = Point(self.head.x, self.head.y - GRID_SIZE)
         elif direction == Direction.DOWN:
@@ -74,29 +77,23 @@ class SnakeAI:
         
         return False
 
-    def handleMove(self):
+    def handleMove(self, action):
+        self.sameState += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                print('Final score:', self.score)
                 pygame.quit()
                 quit()
-            if event.type == pygame.KEYDOWN:
-                if (event.key == pygame.K_UP or event.key == pygame.K_w) and self.direction != Direction.DOWN:
-                    self.direction = Direction.UP
-                elif (event.key == pygame.K_DOWN or event.key == pygame.K_s) and self.direction != Direction.UP:
-                    self.direction = Direction.DOWN
-                elif (event.key == pygame.K_LEFT or event.key == pygame.K_a) and self.direction != Direction.RIGHT:
-                    self.direction = Direction.LEFT
-                elif (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and self.direction != Direction.LEFT:
-                    self.direction = Direction.RIGHT
     
-        self.incHead(self.direction)
+        self.incHead(action)
         self.body.insert(0, self.head) # fill in the space where the head was moved
 
-        if self.checkGameOver():
-            return True
+        reward = 0
+        if self.checkGameOver() or self.sameState > 100*len(self.body): # scales to allow time for long times between growth for longer snakes
+            reward = -1
+            return reward, True
 
         if self.head == self.food:
+            reward = 1
             self.score += 1
             self.placeFood() # no pop, the fill in acts as the growth
         else:
@@ -105,7 +102,7 @@ class SnakeAI:
         self.updateUI()
         self.clock.tick(VEL)
 
-        return False
+        return reward, False
 
 ai = SnakeAI()
 
