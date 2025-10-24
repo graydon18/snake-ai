@@ -21,8 +21,8 @@ FOOD_COLOUR = '#ed2939'
 
 SCREEN_WIDTH = 960
 SCREEN_HEIGHT = 720
-GRID_SIZE = 20
-VEL = 20
+GRID_SIZE = 40
+VEL = 5
 
 class SnakeGame:
     def __init__(self):  
@@ -44,6 +44,16 @@ class SnakeGame:
         self.food = Point(x, y)
         if self.food in self.snake:
             self.placeFood()
+    
+    def incHead(self, direction):
+        if direction == Direction.UP:
+            self.head = Point(self.head.x, self.head.y - GRID_SIZE)
+        elif direction == Direction.DOWN:
+            self.head = Point(self.head.x, self.head.y + GRID_SIZE)
+        elif direction == Direction.LEFT:
+            self.head = Point(self.head.x - GRID_SIZE, self.head.y)
+        elif direction == Direction.RIGHT:
+            self.head = Point(self.head.x + GRID_SIZE, self.head.y)
 
     def updateUI(self):  
         for point in self.snake:
@@ -54,7 +64,7 @@ class SnakeGame:
 
         pygame.display.flip()
 
-    def moveHandle(self):
+    def handleMove(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -69,17 +79,23 @@ class SnakeGame:
                 elif (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and self.direction != Direction.LEFT:
                     self.direction = Direction.RIGHT
     
+        self.incHead(self.direction)
+        self.snake.insert(0, self.head) # fill in the space where the head was moved
+
+        self.updateUI()
+        self.clock.tick(VEL)
+
+        return False
 
 game = SnakeGame()
 
 running = True
 while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    game_over = game.handleMove()
+        
+    if game_over == True:
+        running = False
 
-    pygame.display.update()
-    game.updateUI()
-    game.clock.tick(60)
+print('Final Score', game.score)
 
 pygame.quit()
