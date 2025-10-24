@@ -67,6 +67,7 @@ class SnakeGame:
     def handleMove(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                print('Final Score', game.score)
                 pygame.quit()
                 quit()
             if event.type == pygame.KEYDOWN:
@@ -81,6 +82,12 @@ class SnakeGame:
     
         self.incHead(self.direction)
         self.snake.insert(0, self.head) # fill in the space where the head was moved
+
+        if self.head == self.food:
+            self.score += 1
+            self.placeFood() # no pop, the fill in acts as the growth
+        else:
+            self.snake.pop()
 
         self.updateUI()
         self.clock.tick(VEL)
