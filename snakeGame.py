@@ -1,5 +1,6 @@
 import pygame
 import random
+import numpy
 
 from enum import Enum
 from collections import namedtuple
@@ -48,13 +49,22 @@ class SnakeAI:
             self.placeFood()
     
     def incHead(self, action):
-        if direction == Direction.UP:
+        # [1, 0, 0] - straight
+        # [0, 1, 0] - left
+        # [0, 0, 1] - right
+
+        if numpy.array_equal(action, [0, 1, 0]):
+            self.direction = Direction((self.direction - 1) % 4)
+        elif numpy.array_equal(action, [0, 0, 1]):
+            self.direction = Direction((self.direction + 1) % 4)
+
+        if self.direction == Direction.UP:
             self.head = Point(self.head.x, self.head.y - GRID_SIZE)
-        elif direction == Direction.DOWN:
+        elif self.direction == Direction.DOWN:
             self.head = Point(self.head.x, self.head.y + GRID_SIZE)
-        elif direction == Direction.LEFT:
+        elif self.direction == Direction.LEFT:
             self.head = Point(self.head.x - GRID_SIZE, self.head.y)
-        elif direction == Direction.RIGHT:
+        elif self.direction == Direction.RIGHT:
             self.head = Point(self.head.x + GRID_SIZE, self.head.y)
 
     def updateUI(self):  
@@ -103,16 +113,3 @@ class SnakeAI:
         self.clock.tick(VEL)
 
         return reward, False
-
-ai = SnakeAI()
-
-running = True
-while running:
-    gameOver = ai.handleMove()
-        
-    if gameOver == True:
-        running = False
-
-print('GAME OVER\nFinal score:', ai.score)
-
-pygame.quit()
