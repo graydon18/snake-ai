@@ -53,6 +53,21 @@ class SnakeGame:
         pygame.draw.circle(self.screen, FOOD_COLOUR, [self.food.x + (GRID_SIZE // 2), self.food.y + (GRID_SIZE // 2)], (GRID_SIZE // 2))
 
         pygame.display.flip()
+
+    def moveHandle(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if (event.key == pygame.K_UP or event.key == pygame.K_w) and self.direction != Direction.DOWN:
+                    self.direction = Direction.UP
+                elif (event.key == pygame.K_DOWN or event.key == pygame.K_s) and self.direction != Direction.UP:
+                    self.direction = Direction.DOWN
+                elif (event.key == pygame.K_LEFT or event.key == pygame.K_a) and self.direction != Direction.RIGHT:
+                    self.direction = Direction.LEFT
+                elif (event.key == pygame.K_RIGHT or event.key == pygame.K_d) and self.direction != Direction.LEFT:
+                    self.direction = Direction.RIGHT
     
 
 game = SnakeGame()
