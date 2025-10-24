@@ -14,31 +14,33 @@ class Direction(Enum):
 
 Point = namedtuple('Point', 'x, y')
 
+GAME_BG = '#74c365'
+SCREEN_WIDTH = 960
+SCREEN_HEIGHT = 720
 GRID_SIZE = 20
 VEL = 20
 
 class SnakeGame:
-    def __init__(self, w = 960, h = 720):
-        self.w = w
-        self.h = h
-
-        self.display = pygame.display.set_mode((self.w, self.h))
+    def __init__(self):  
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Snake AI")
+        self.screen.fill(GAME_BG)
         self.clock = pygame.time.Clock()
 
         self.direction = Direction.RIGHT
-        self.head = Point(self.w/4, self.h/2)
+        self.head = Point(SCREEN_WIDTH / 4, SCREEN_HEIGHT /2)
         self.snake = [self.head, Point(self.head.x - GRID_SIZE, self.head.y), Point(self.head.x - (2 * GRID_SIZE), self.head.y)]
         
         self.score = 0
         self.placeFood()
 
     def placeFood(self):
-        x = random.randint(0, (self.w - GRID_SIZE) // GRID_SIZE) * GRID_SIZE
-        y = random.randint(0, (self.h - GRID_SIZE) // GRID_SIZE) * GRID_SIZE
+        x = random.randint(0, (SCREEN_WIDTH - GRID_SIZE) // GRID_SIZE) * GRID_SIZE
+        y = random.randint(0, (SCREEN_HEIGHT - GRID_SIZE) // GRID_SIZE) * GRID_SIZE
         self.food = Point(x, y)
         if self.food in self.snake:
             self.placeFood()
+    
 
 game = SnakeGame()
 
