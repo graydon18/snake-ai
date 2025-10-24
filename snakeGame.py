@@ -15,6 +15,10 @@ class Direction(Enum):
 Point = namedtuple('Point', 'x, y')
 
 GAME_BG = '#74c365'
+SNAKE_COLOUR = '#6495ed'
+HEAD_COLOUR = '#1b61e4'
+FOOD_COLOUR = '#ed2939'
+
 SCREEN_WIDTH = 960
 SCREEN_HEIGHT = 720
 GRID_SIZE = 20
@@ -40,6 +44,15 @@ class SnakeGame:
         self.food = Point(x, y)
         if self.food in self.snake:
             self.placeFood()
+
+    def updateUI(self):  
+        for point in self.snake:
+            pygame.draw.circle(self.screen, SNAKE_COLOUR, [point.x + (GRID_SIZE // 2), point.y + (GRID_SIZE // 2)], (GRID_SIZE // 2))
+        
+        pygame.draw.circle(self.screen, HEAD_COLOUR, [self.head.x + (GRID_SIZE // 2), self.head.y + (GRID_SIZE // 2)], (GRID_SIZE // 2))  
+        pygame.draw.circle(self.screen, FOOD_COLOUR, [self.food.x + (GRID_SIZE // 2), self.food.y + (GRID_SIZE // 2)], (GRID_SIZE // 2))
+
+        pygame.display.flip()
     
 
 game = SnakeGame()
@@ -51,6 +64,7 @@ while running:
             running = False
 
     pygame.display.update()
+    game.updateUI()
     game.clock.tick(60)
 
 pygame.quit()
