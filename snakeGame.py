@@ -25,7 +25,7 @@ SCREEN_HEIGHT = 720
 GRID_SIZE = 40
 VEL = 10
 
-class SnakeAI:
+class SnakeGame:
     def __init__(self):  
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Snake AI")
