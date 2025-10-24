@@ -22,9 +22,9 @@ FOOD_COLOUR = '#ed2939'
 SCREEN_WIDTH = 960
 SCREEN_HEIGHT = 720
 GRID_SIZE = 40
-VEL = 5
+VEL = 10
 
-class SnakeGame:
+class SnakeAI:
     def __init__(self):  
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         pygame.display.set_caption("Snake AI")
@@ -107,15 +107,15 @@ class SnakeGame:
 
         return False
 
-game = SnakeGame()
+ai = SnakeAI()
 
 running = True
 while running:
-    game_over = game.handleMove()
+    gameOver = ai.handleMove()
         
-    if game_over == True:
+    if gameOver == True:
         running = False
 
-print('GAME OVER\nFinal score:', game.score)
+print('GAME OVER\nFinal score:', ai.score)
 
 pygame.quit()
